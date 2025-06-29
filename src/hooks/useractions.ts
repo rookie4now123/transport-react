@@ -7,11 +7,10 @@ import {
    type LoginInput,  
    type LogoutInput} from "../helpers/interfaces"
 
+const baseURL = "http://localhost:8000/api";
 
 function useUserActions() {
   const navigate: NavigateFunction = useNavigate();
-  const baseURL = "http://localhost:8000/api";
-
   return {
     login,
     logout,
@@ -77,6 +76,39 @@ function useUserActions() {
   }
 }
 
+function useCrud() {
+  async function get<T>(url: string, params?: Record<string, any>): Promise<T> {
+    try {
+      const response = await axios.get<T>(`${baseURL}/${url}`, { params });
+      return response.data;
+    } catch (error) {
+      console.error(`GET request to ${url} failed:`, error);
+      throw error;
+    }
+  }
+  async function post<T, U>(url: string, data: U): Promise<T> {
+    try {
+      const response = await axios.post<T>(`${baseURL}/${url}`, data);
+      return response.data;
+    } catch (error) {
+      console.error(`POST request to ${url} failed:`, error);
+      throw error;
+    }
+  }
+
+  // You can also add put, patch, delete in the same pattern
+  // async function put<T, U>...
+  // async function del<T>...
+
+  // Expose the functions so components can use them
+  return {
+    get,
+    post,
+    // put,
+    // del
+  };
+}
+
 // Get the user
 function getUser(): User | null {
     const authString = localStorage.getItem("auth") || "null";
@@ -111,6 +143,7 @@ function setUserData(data: AuthData): void {
   }
 
 export {
+  useCrud,
   useUserActions,
   getUser,
   getAccessToken,

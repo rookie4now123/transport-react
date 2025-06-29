@@ -4,3 +4,7 @@
   --color-mint-500: oklch(0.72 0.11 178);
   --color-chestnut: #1336aa;
 }
+
+.leaflet-container {
+  height: 800px;
+}

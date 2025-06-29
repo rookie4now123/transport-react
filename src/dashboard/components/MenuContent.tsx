@@ -16,7 +16,7 @@ import { NavLink } from 'react-router';
 const mainListItems = [
   { text: 'Home', icon: <HomeRoundedIcon color="success"/>, path: '/dashboard' },
   { text: 'Tracks', icon: <AnalyticsRoundedIcon color="success"/>, path: '/dashboard/tracks' },
-  { text: 'Clients', icon: <PeopleRoundedIcon color="success"/>, path: '/dashboard/students' },
+  { text: 'Students', icon: <PeopleRoundedIcon color="success"/>, path: '/dashboard/students' },
   { text: 'Stations', icon: <AssignmentRoundedIcon color="success"/>, path: '/dashboard/stations' },
 ];
 

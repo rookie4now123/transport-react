@@ -30,3 +30,14 @@ export interface AuthState {
 export interface ProtectedRouteProps {
     children: React.ReactNode;
   }
+
+export interface Location {
+    latitude: number;
+    longitude: number;
+  }
+  
+export interface Station {
+    id: string;               // JSON id is a string (UUID)
+    station_name: string;     // matches "station_name" in JSON
+    location: Location;       // nested object with latitude and longitude
+  }
