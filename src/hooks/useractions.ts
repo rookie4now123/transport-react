@@ -5,9 +5,8 @@ import {
    type User, 
    type AuthData, 
    type LoginInput,  
-   type LogoutInput} from "../helpers/interfaces"
+   type LogoutInput, baseURL} from "../helpers/interfaces"
 
-const baseURL = "http://localhost:8000/api";
 
 function useUserActions() {
   const navigate: NavigateFunction = useNavigate();
@@ -79,7 +78,7 @@ function useUserActions() {
 function useCrud() {
   async function get<T>(url: string, params?: Record<string, any>): Promise<T> {
     try {
-      const response = await axios.get<T>(`${baseURL}/${url}`, { params });
+      const response = await axiosService.get<T>(`${baseURL}/${url}`, { params });
       return response.data;
     } catch (error) {
       console.error(`GET request to ${url} failed:`, error);
@@ -88,7 +87,7 @@ function useCrud() {
   }
   async function post<T, U>(url: string, data: U): Promise<T> {
     try {
-      const response = await axios.post<T>(`${baseURL}/${url}`, data);
+      const response = await axiosService.post<T>(`${baseURL}/${url}`, data);
       return response.data;
     } catch (error) {
       console.error(`POST request to ${url} failed:`, error);

@@ -1,63 +1,29 @@
-import {useState} from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
-import Box from '@mui/material/Box';
+import React, { useEffect } from 'react';
+import { useTrackingStore } from '../helpers/trackingStore';
+import Mymap from '../components/Mymap/Mymap';
+export default function TrackingDashboard() {
+  // This useEffect logic for initialization remains exactly the same.
+  // It's the entry point for the feature.
+  const fetchLines = useTrackingStore((state) => state.fetchLines);
+  const initSse = useTrackingStore((state) => state.initSse);
+  const closeSse = useTrackingStore((state) => state.closeSse);
+  const clearStaleLocations = useTrackingStore((state) => state.clearStaleLocations);
 
+  useEffect(() => {
+    fetchLines();
+    initSse();
 
-import { useMapEvents } from 'react-leaflet/hooks'
-function MyComponent() {
-  const map = useMapEvents({
-    click: () => {
-      map.locate()
-    },
-    locationfound: (location) => {
-      console.log('location found:', location)
-    },
-  })
-  return null
-}
+    const staleCleanerInterval = setInterval(clearStaleLocations, 30000);
 
+    return () => {
+      closeSse();
+      clearInterval(staleCleanerInterval);
+    };
+  }, [fetchLines, initSse, closeSse, clearStaleLocations]);
 
-
-export default function Student() {
- // Latitude, Longitude for London
+  // The return statement is now much simpler.
+  // It just renders the Mymap component, which handles its own internal layout.
   return (
-    
-    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-   Student
-
-    <MapContainer
-    center={{ lat: 51.505, lng: -0.09 }}
-    zoom={13}
-    scrollWheelZoom={false}>
-    <TileLayer
-      attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    />
-    <MyComponent/>
-    {/* <LocationMarker /> */}
-  </MapContainer>
-
-  </Box>
-    
-  )
-}
-
-
-function LocationMarker() {
-  const [position, setPosition] = useState(null)
-  const map = useMapEvents({
-    click() {
-      map.locate()
-    },
-    locationfound(e) {
-      setPosition(e.latlng)
-      map.flyTo(e.latlng, map.getZoom())
-    },
-  })
-
-  return position === null ? null : (
-    <Marker position={position}>
-      <Popup>You are here</Popup>
-    </Marker>
-  )
+    <Mymap />
+  );
 }

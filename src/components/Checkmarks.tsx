@@ -1,13 +1,14 @@
-import * as React from 'react';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import ListItemText from '@mui/material/ListItemText';
-import Select, { type SelectChangeEvent } from '@mui/material/Select';
-import Checkbox from '@mui/material/Checkbox';
+import { useState, useEffect } from "react";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import ListItemText from "@mui/material/ListItemText";
+import Select, { type SelectChangeEvent } from "@mui/material/Select";
+import Checkbox from "@mui/material/Checkbox";
 
-11111111
+import { useCrud } from "../hooks/useractions"; // Adjust path to your hook file
+import { type Lines } from "../helpers/interfaces";
+// Define an interface for what a lines object looks like
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -20,48 +21,74 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'Oliver Hansen',
-  'Van Henry',
-  'April Tucker',
-  'Ralph Hubbard',
-  'Omar Alexander',
-  'Carlos Abbott',
-  'Miriam Wagner',
-  'Bradley Wilkerson',
-  'Virginia Andrews',
-  'Kelly Snyder',
-];
+export default function Mapbutton() {
+  // 1. Get the 'get' function from our hook
+  const { get } = useCrud();
 
-export default function MultipleSelectCheckmarks() {
-  const [personName, setPersonName] = React.useState<string[]>([]);
-  const handleChange = (event: SelectChangeEvent<typeof personName>) => {
+  // 2. Manage state within the component, NOT in the hook
+  const [lines, setLines] = useState<Lines[]>([]);
+  const [selectedLines, setSelectedLines] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    // 3. Define an async function to fetch data
+    const fetchlines = async () => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const fetchedlines = await get<Lines[]>("route/"); // e.g., GET /api/lines/
+        // Let the component decide what to do with the data
+        setLines(fetchedlines);
+      } catch (err) {
+        setError("Failed to fetch lines. Please try again later.");
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchlines();
+  }, []); // Dependency array includes 'get'
+
+  const handleChange = (event: SelectChangeEvent<string[]>) => {
     const {
       target: { value },
     } = event;
-    setPersonName(
-      typeof value === 'string' ? value.split(',') : value,
+    setSelectedLines(
+      typeof value === 'string' ? value.split(',') : value
     );
   };
+
+  if (isLoading) {
+    return <div>Loading lines...</div>;
+  }
+  if (error) {
+    return <div style={{ color: "red" }}>{error}</div>;
+  }
 
   return (
     <div>
       <FormControl sx={{ m: 1, width: 300 }}>
-        <InputLabel id="demo-multiple-checkbox-label">Tag</InputLabel>
         <Select
-          labelId="demo-multiple-checkbox-label"
-          id="demo-multiple-checkbox"
+          displayEmpty
           multiple
-          value={personName}
+          value={selectedLines}
           onChange={handleChange}
-          input={<OutlinedInput label="Tag" />}
-          renderValue={(selected) => selected.join(', ')}
+          input={<OutlinedInput />}
+          renderValue={(selected) => {
+            const selectedCount = selected.length;
+            const totalCount = lines.length;
+            return `${selectedCount} / ${totalCount} selected`;
+          }}
           MenuProps={MenuProps}
+          inputProps={{ "aria-label": "Without label" }}
         >
-          {names.map((name) => (
-            <MenuItem key={name} value={name}>
-              <Checkbox checked={personName.includes(name)} />
-              <ListItemText primary={name} />
+          {lines.map((lines) => (
+            <MenuItem key={lines.id} value={lines.route_name}>
+              <Checkbox checked={selectedLines.includes(lines.route_name)} />
+              <em>Placeholder111</em>
+              <ListItemText primary={lines.route_name} />
             </MenuItem>
           ))}
         </Select>

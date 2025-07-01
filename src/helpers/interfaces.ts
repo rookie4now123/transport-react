@@ -41,3 +41,38 @@ export interface Station {
     station_name: string;     // matches "station_name" in JSON
     location: Location;       // nested object with latitude and longitude
   }
+
+export interface Lines{
+  id: string;
+  route_name: string;
+}
+
+export interface LocationData {
+  route_id: string;
+  route_name: string;
+  monitor_name: string;
+  run_id: string; // The UUID of the RouteRun
+  latitude: number;
+  longitude: number;
+  timestamp: string; // The ISO 8601 timestamp string
+}
+
+export interface TrackingState {
+  lines: Lines[];
+  selectedLines: string[];
+  locations: Record<string, LocationData>; // Live locations indexed by route_id
+  sseConnection: EventSource | null;
+  flyToLocation: LatLngTuple | null;
+}
+
+export interface TrackingActions {
+  fetchLines: () => Promise<void>;
+  toggleLineSelection: (lineName: string) => void;
+  initSse: () => void;
+  closeSse: () => void;
+  clearStaleLocations: () => void;
+  clearFlyToLocation: () => void; // <-- ADD THIS
+}
+
+export const baseURL = "http://localhost:8000/api";
+export type LatLngTuple = [number, number];
