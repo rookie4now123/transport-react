@@ -63,6 +63,7 @@ export interface TrackingState {
   locations: Record<string, LocationData>; // Live locations indexed by route_id
   sseConnection: EventSource | null;
   flyToLocation: LatLngTuple | null;
+  liveLineNames: Set<string>;
 }
 
 export interface TrackingActions {
@@ -70,7 +71,8 @@ export interface TrackingActions {
   toggleLineSelection: (lineName: string) => void;
   initSse: () => void;
   closeSse: () => void;
-  clearStaleLocations: () => void;
+
+  updateAndCleanLiveStatus: () => void;
   clearFlyToLocation: () => void; // <-- ADD THIS
 }
 

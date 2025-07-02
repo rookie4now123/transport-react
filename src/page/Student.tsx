@@ -7,19 +7,19 @@ export default function TrackingDashboard() {
   const fetchLines = useTrackingStore((state) => state.fetchLines);
   const initSse = useTrackingStore((state) => state.initSse);
   const closeSse = useTrackingStore((state) => state.closeSse);
-  const clearStaleLocations = useTrackingStore((state) => state.clearStaleLocations);
+  const updateAndCleanLiveStatus = useTrackingStore((state) => state.updateAndCleanLiveStatus);
 
   useEffect(() => {
     fetchLines();
     initSse();
 
-    const staleCleanerInterval = setInterval(clearStaleLocations, 30000);
+    const liveStatusInterval = setInterval(updateAndCleanLiveStatus, 30000);
 
     return () => {
       closeSse();
-      clearInterval(staleCleanerInterval);
+      clearInterval(liveStatusInterval);
     };
-  }, [fetchLines, initSse, closeSse, clearStaleLocations]);
+  }, [fetchLines, initSse, closeSse, updateAndCleanLiveStatus]);
 
   // The return statement is now much simpler.
   // It just renders the Mymap component, which handles its own internal layout.

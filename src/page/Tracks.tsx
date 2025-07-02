@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-
+import { baseURL } from '../helpers/interfaces';
 // The URL of your SSE endpoint
-const SSE_URL = 'http://127.0.0.1:8000/api/location-stream/';
 
 export interface LocationData {
   route_id: string;
@@ -17,7 +16,7 @@ export default function Tracks() {
   const [locations, setLocations] = useState<Record<string, LocationData>>({});
 
   useEffect(() => {
-    const eventSource = new EventSource(SSE_URL, { withCredentials: true });
+    const eventSource = new EventSource(`${baseURL}/location-stream/`, { withCredentials: true });
     eventSource.onmessage = (event) => {
       const newLocationData: LocationData = JSON.parse(event.data);
       console.log('Received location update:', newLocationData);

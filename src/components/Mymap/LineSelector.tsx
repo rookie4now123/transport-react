@@ -6,7 +6,8 @@ export default function LineSelector() {
     const lines = useTrackingStore((state) => state.lines);
     const selectedLines = useTrackingStore((state) => state.selectedLines);
     const toggleLineSelection = useTrackingStore((state) => state.toggleLineSelection);
-  
+    const liveLineNames = useTrackingStore((state) => state.liveLineNames);
+
     return (
       <FormControl sx={{ m: 1, width: 300, background: 'white' }}>
         <Select
@@ -14,21 +15,28 @@ export default function LineSelector() {
           displayEmpty
           value={selectedLines}
           input={<OutlinedInput />}
-          renderValue={(selected) => {
-            return `${selected.length} / ${lines.length} selected`;
+          renderValue={() => {
+            return `${liveLineNames.size} / ${lines.length} selected`;
           }}
         >
-          {lines.map((line) => (
+       {lines.map((line) => {
+          const isLive = liveLineNames.has(line.route_name);
+
+          return (
             <MenuItem
               key={line.id}
               value={line.route_name}
-              // Use our store action on click for better control
+              // 2. The onClick handler is now very simple. It just reports the click.
               onClick={() => toggleLineSelection(line.route_name)}
             >
               <Checkbox checked={selectedLines.includes(line.route_name)} />
-              <ListItemText primary={line.route_name} />
+              <ListItemText 
+                primary={line.route_name}
+                sx={{ color: isLive ? 'green' : 'red' }} 
+              />
             </MenuItem>
-          ))}
+          );
+        })}
         </Select>
       </FormControl>
     );
