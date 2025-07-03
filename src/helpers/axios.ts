@@ -11,10 +11,9 @@ import {
   setUserData,
 } from "../hooks/useractions";
 import { useAuthStore } from "./authStore";
-
-const BASEURL = "http://127.0.0.1:8000/";
+import { baseURL } from "./interfaces";
 const axiosService: AxiosInstance = axios.create({
-  baseURL: BASEURL,
+  baseURL: baseURL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -42,7 +41,7 @@ const refreshAuthLogic = async (failedRequest: any): Promise<void> => {
   }
   try {
     const tokenRefreshResponse: AxiosResponse<AuthData> = await axios.post(
-      `${BASEURL}/auth/refresh/`,
+      `${baseURL}/auth/refresh/`,
       { refresh: refreshToken }
     );
     const newAuthData = tokenRefreshResponse.data;

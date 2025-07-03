@@ -2,7 +2,11 @@ import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 import { useTrackingStore } from '../../helpers/trackingStore';
 
-export default function MapFlyToController() {
+type Props = {
+    maxZoom?: number;
+  };
+
+export default function MapFlyToController({maxZoom = 12}: Props) {
   // Get the leaflet map instance
   const map = useMap();
 
@@ -13,7 +17,7 @@ export default function MapFlyToController() {
   // This effect runs whenever the 'flyToLocation' signal changes
   useEffect(() => {
     if (flyToLocation) {
-      const zoom = map.getZoom() > 12 ? 12 : map.getZoom(); // Zoom in if we are far out
+      const zoom = map.getZoom() > maxZoom ? maxZoom : map.getZoom(); // Zoom in if we are far out
       map.flyTo(flyToLocation, zoom);
 
       // IMPORTANT: Reset the signal in the store after we've used it.
