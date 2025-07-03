@@ -1,3 +1,6 @@
+bun run dev to start
+and you need to run daphne CoreRoot.asgi:application from the transport repo
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
