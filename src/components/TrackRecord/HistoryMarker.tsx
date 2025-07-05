@@ -1,47 +1,76 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Marker, Popup, Polyline } from 'react-leaflet';
 import { useReplayStore } from '../../helpers/useReplayStore';
-import L, { type LatLng }  from 'leaflet';
+import L, { type LatLng } from 'leaflet';
+import { gsap } from 'gsap'; // 1. Import GSAP
 
-// (Optional but recommended) Define a custom icon for the historical marker
+// Your icon definition remains the same
 const historyIcon = new L.Icon({
-  iconUrl: '/history-bus-icon.png', // A different icon to distinguish it
+  iconUrl: '/history-bus-icon.png',
   iconSize: [35, 35],
+  iconAnchor: [17, 35],
+  popupAnchor: [0, -35],
 });
 
-export default function HistoryMarker() {
-  // 1. Subscribe to the correct store: useReplayStore
+export default function AnimatedHistoryMarker() {
   const trackData = useReplayStore((state) => state.trackData);
   const sliderIndex = useReplayStore((state) => state.sliderIndex);
 
-  const currentPoint = trackData && trackData.length > 0 ? trackData[sliderIndex] : null;
-  // 2. Add a guard clause: If there's no track data, render nothing.
+  // 2. Create a ref to hold the actual Leaflet Marker instance
+  const markerRef = useRef<L.Marker | null>(null);
+
+  // 3. This useEffect handles the animation whenever the sliderIndex changes
+  useEffect(() => {
+    // Ensure we have a marker instance and data to work with
+    if (!markerRef.current || !trackData || trackData.length === 0) {
+      return;
+    }
+
+    const targetPoint = trackData[sliderIndex];
+    if (!targetPoint) return;
+
+    // The core of the animation logic
+    gsap.to(
+      // GSAP animates plain objects, so we get the current lat/lng
+      markerRef.current.getLatLng(), 
+      {
+        // And we animate TO the target lat/lng
+        lat: targetPoint.latlng.lat,
+        lng: targetPoint.latlng.lng,
+        duration: 0.5, // Animation duration in seconds
+        ease: 'power1.inOut', // A nice easing function for smooth start/end
+        
+        // This function runs on every frame of the animation
+        onUpdate: function () {
+          // 'this.targets()[0]' is the object being animated (the LatLng object)
+          markerRef.current?.setLatLng(this.targets()[0]);
+        },
+      }
+    );
+  }, [sliderIndex, trackData]); // Rerun effect if slider or the whole track changes
+
+  // Guard clause: If there's no data, render nothing.
   if (!trackData || trackData.length === 0) {
     return null;
   }
-
-  const pathPositions: LatLng[] = trackData.map(point => point.latlng);
   
-  // The single current point for the Marker
+  const pathPositions: LatLng[] = trackData.map(point => point.latlng);
+  const initialPoint = trackData[0]; // The marker's initial position
 
   return (
     <>
-      {/* 4. Draw the entire path of the track */}
       <Polyline pathOptions={{ color: 'blue' }} positions={pathPositions} />
 
-      {/* 5. Draw the single, moving marker if the current point exists */}
-      {currentPoint && (
-        <Marker
-        position={currentPoint.latlng}
-        >
-          <Popup>
-          <strong>Position at:</strong><br />
-            {currentPoint.timestamp 
-              ? new Date(currentPoint.timestamp).toLocaleTimeString() 
-              : 'Time not available'}
-              </Popup>
-        </Marker>
-      )}
+      {/* 
+        Render the marker only ONCE at the initial position.
+        GSAP will take over moving it from now on.
+        We attach the ref here.
+      */}
+      <Marker ref={markerRef} position={initialPoint.latlng}>
+        <Popup>
+          I am an animated marker!
+        </Popup>
+      </Marker>
     </>
   );
 }

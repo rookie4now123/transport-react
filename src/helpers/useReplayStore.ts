@@ -6,6 +6,15 @@ import{
 } from './interfaces.ts'
 import L from 'leaflet';
 
+interface RawLocationPoint { // Renamed to be more descriptive
+  id: string;
+  location: {
+    latitude: number;
+    longitude: number;
+  };
+  run: string;
+  timestamp?: string; // Make it optional if it's not always present
+}
 
 export const useReplayStore = create<ReplayState & ReplayActions>((set, get) => ({
     // --- Initial State ---
@@ -56,7 +65,7 @@ export const useReplayStore = create<ReplayState & ReplayActions>((set, get) => 
             route_name: selectedRoute,
             date: dateString,
         };
-        const response = await axiosService.get<LocationData[]>(
+        const response = await axiosService.get<RawLocationPoint[]>(
           `${baseURL}/locationpoints/`, { params: params }
         );
   

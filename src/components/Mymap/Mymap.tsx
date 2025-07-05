@@ -11,7 +11,7 @@ export default function Mymap() {
         <LineSelector />
       </div>
     <MapContainer
-      center={[51.505, -0.09]}
+      center={[33.505, -113]}
       zoom={13}
       zoomControl={false}
     >

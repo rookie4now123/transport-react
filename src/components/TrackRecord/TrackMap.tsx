@@ -113,8 +113,8 @@ export default function TrackMap() {
         <TrackButton />
       </div>
     <MapContainer
-      center={[51.505, -0.09]}
-      zoom={13}
+      center={[33.505, -113]}
+      zoom={12}
       zoomControl={false}
     >
       <TileLayer

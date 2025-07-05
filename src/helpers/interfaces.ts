@@ -54,10 +54,10 @@ export interface LocationData {
   route_name: string;
   monitor_name: string;
   run_id: string; // The UUID of the RouteRun
-  location: { // <-- The 'location' property is now an object
+ // <-- The 'location' property is now an object
     latitude: number;
     longitude: number;
-  };
+
   timestamp: string; // The ISO 8601 timestamp string
 }
 
