@@ -10,13 +10,12 @@ import Station from './page/Station.tsx';
 import Student from './page/Student.tsx';
 import Tracks from './page/Tracks.tsx';
 import MainGrid from './dashboard/components/MainGrid.tsx';
-import { AuthNavigator } from './page/AuthNavigator.tsx';
 import ProtectedRoute from './helpers/ProtectedRoute.tsx';
 import Test from './page/Test.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <BrowserRouter>
-  <AuthNavigator />
+  {/* <AuthNavigator /> */}
     <Routes>
       <Route path="/" element={<App />} />
       <Route element={<ProtectedRoute />}>

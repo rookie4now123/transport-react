@@ -15,6 +15,7 @@ import {
     sseConnection: null,
     flyToLocation: null,
     liveLineNames: new Set(),
+    
     // --- Actions ---
   
     // 2. Corrected `fetchLines` action
@@ -39,6 +40,7 @@ import {
             );
             if (locationData) {
               newFlyToLocation = [locationData.latitude, locationData.longitude];
+              console.log(newFlyToLocation)
             }
           }
       set(state => {

@@ -18,6 +18,7 @@ const mainListItems = [
   { text: 'Tracks', icon: <AnalyticsRoundedIcon color="success"/>, path: '/dashboard/tracks' },
   { text: 'Students', icon: <PeopleRoundedIcon color="success"/>, path: '/dashboard/students' },
   { text: 'Stations', icon: <AssignmentRoundedIcon color="success"/>, path: '/dashboard/stations' },
+  { text: 'Texts', icon: <AssignmentRoundedIcon color="success"/>, path: '/dashboard/test' },
 ];
 
 const secondaryListItems = [

@@ -1,3 +1,5 @@
+import { type LatLng } from 'leaflet';
+
 export interface User {
     id: string;
     username: string;
@@ -32,8 +34,8 @@ export interface ProtectedRouteProps {
   }
 
 export interface Location {
-    latitude: number;
-    longitude: number;
+    latlng: LatLng;
+    timestamp?: string;
   }
   
 export interface Station {
@@ -52,8 +54,10 @@ export interface LocationData {
   route_name: string;
   monitor_name: string;
   run_id: string; // The UUID of the RouteRun
-  latitude: number;
-  longitude: number;
+  location: { // <-- The 'location' property is now an object
+    latitude: number;
+    longitude: number;
+  };
   timestamp: string; // The ISO 8601 timestamp string
 }
 
@@ -75,6 +79,25 @@ export interface TrackingActions {
   updateAndCleanLiveStatus: () => void;
   clearFlyToLocation: () => void; // <-- ADD THIS
 }
+
+export interface ReplayState {
+  selectedRoute: string | null;
+  selectedDate: Date | null;
+  trackData: Location[]; // The full track for the day
+  isLoading: boolean;
+  sliderIndex: number;
+  historylines: Lines[];
+}
+
+export interface ReplayActions {
+  setSelectedDate: (date: Date | null) => void;
+  setSelectedRoute: (route_name: string | null) => void;
+  fetchTrackForDisplay: () => Promise<void>;
+  setSliderIndex: (index: number) => void;
+  fetchHistoryLines: () => Promise<void>;
+}
+
+
 
 export const baseURL = "http://localhost:8000/api";
 export type LatLngTuple = [number, number];

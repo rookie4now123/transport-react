@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Marker, Popup } from 'react-leaflet';
 import { useTrackingStore } from '../../helpers/trackingStore';
 import L from 'leaflet';
@@ -17,7 +17,7 @@ export default function LiveMarkers() {
     const visibleMarkers = Object.values(locations).filter(loc => 
       selectedLines.includes(loc.route_name)
     );
-  
+
     return (
       <>
         {visibleMarkers.map((location) => (
