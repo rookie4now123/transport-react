@@ -3,6 +3,7 @@ import { Marker, Popup, Polyline } from 'react-leaflet';
 import { useReplayStore } from '../../helpers/useReplayStore';
 import L, { type LatLng } from 'leaflet';
 import { gsap } from 'gsap'; // 1. Import GSAP
+import AnimatedPolyline from './AnimatedPolyline';
 
 // Your icon definition remains the same
 const historyIcon = new L.Icon({
@@ -59,14 +60,15 @@ export default function AnimatedHistoryMarker() {
 
   return (
     <>
-      <Polyline pathOptions={{ color: 'blue' }} positions={pathPositions} />
-
+      {/* <Polyline pathOptions={{ color: 'blue' }} positions={pathPositions} /> */}
+        <AnimatedPolyline/>
       {/* 
         Render the marker only ONCE at the initial position.
         GSAP will take over moving it from now on.
         We attach the ref here.
       */}
-      <Marker ref={markerRef} position={initialPoint.latlng}>
+      <Marker riseOnHover={true}
+      ref={markerRef} position={initialPoint.latlng}>
         <Popup>
           I am an animated marker!
         </Popup>

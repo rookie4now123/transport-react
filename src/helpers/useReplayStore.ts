@@ -5,7 +5,7 @@ import{
     type ReplayActions, type ReplayState, type Lines, baseURL
 } from './interfaces.ts'
 import L from 'leaflet';
-
+import dayjs from 'dayjs';
 interface RawLocationPoint { // Renamed to be more descriptive
   id: string;
   location: {
@@ -60,7 +60,7 @@ export const useReplayStore = create<ReplayState & ReplayActions>((set, get) => 
   
       try {
         // Format the date to YYYY-MM-DD for the API query
-        const dateString = selectedDate.toISOString().split('T')[0];
+        const dateString = dayjs(selectedDate).format('YYYY-MM-DD');
         const params = {
             route_name: selectedRoute,
             date: dateString,

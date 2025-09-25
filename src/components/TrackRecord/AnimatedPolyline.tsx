@@ -19,8 +19,8 @@ export default function AnimatedPolyline() {
       // When new track data arrives, start the animation
       gsap.to(progressRef.current, {
         value: trackData.length, // Animate from 0 to the full length
-        duration: 2, // Animate over 2 seconds
-        ease: 'power2.out',
+        duration: 10, // Animate over 2 seconds
+        ease: 'linear',
         onUpdate: () => {
           // On each frame, update the visible path
           const currentIndex = Math.floor(progressRef.current.value);
